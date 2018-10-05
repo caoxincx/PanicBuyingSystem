@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="panicbuyingsystem_db@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.4">
+    <root id="1"/>
+    <schema id="2" parent="1" name="panicbuyingsystem_db">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="indexdemo"/>
+    <schema id="4" parent="1" name="information_schema"/>
+    <schema id="5" parent="1" name="mysql"/>
+    <schema id="6" parent="1" name="performance_schema"/>
+    <schema id="7" parent="1" name="rufull_db"/>
+    <schema id="8" parent="1" name="sakila"/>
+    <schema id="9" parent="1" name="smarthome_db"/>
+    <schema id="10" parent="1" name="sogal_cti_db"/>
+    <schema id="11" parent="1" name="sogal_warehouse_db"/>
+    <schema id="12" parent="1" name="sso_auth_db"/>
+    <schema id="13" parent="1" name="sys"/>
+    <schema id="14" parent="1" name="world"/>
+    <table id="15" parent="2" name="goods"/>
+    <table id="16" parent="2" name="order_info"/>
+    <table id="17" parent="2" name="pbs_goods"/>
+    <table id="18" parent="2" name="pbs_order_info"/>
+    <table id="19" parent="2" name="pbs_user"/>
+    <column id="20" parent="15" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="21" parent="15" name="goods_name">
+      <Position>2</Position>
+      <DataType>varchar(16)|0</DataType>
+    </column>
+    <column id="22" parent="15" name="goods_title">
+      <Position>3</Position>
+      <DataType>varchar(64)|0</DataType>
+    </column>
+    <column id="23" parent="15" name="goods_img">
+      <Position>4</Position>
+      <DataType>varchar(64)|0</DataType>
+    </column>
+    <column id="24" parent="15" name="goods_detail">
+      <Position>5</Position>
+      <DataType>longtext|0</DataType>
+    </column>
+    <column id="25" parent="15" name="goods_price">
+      <Position>6</Position>
+      <DataType>decimal(10,2)|0</DataType>
+    </column>
+    <column id="26" parent="15" name="goods_stock">
+      <Position>7</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <key id="27" parent="15" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="28" parent="16" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="29" parent="16" name="user_id">
+      <Position>2</Position>
+      <DataType>bigint(20)|0</DataType>
+    </column>
+    <column id="30" parent="16" name="goods_id">
+      <Position>3</Position>
+      <DataType>bigint(20)|0</DataType>
+    </column>
+    <column id="31" parent="16" name="delivery_addr_id">
+      <Position>4</Position>
+      <DataType>bigint(20)|0</DataType>
+    </column>
+    <column id="32" parent="16" name="goods_name">
+      <Position>5</Position>
+      <DataType>varchar(16)|0</DataType>
+    </column>
+    <column id="33" parent="16" name="goods_count">
+      <Position>6</Position>
+      <DataType>int(11)|0</DataType>
+      <DefaultExpression>&apos;0&apos;</DefaultExpression>
+    </column>
+    <column id="34" parent="16" name="goods_price">
+      <Position>7</Position>
+      <DataType>decimal(10,2)|0</DataType>
+      <DefaultExpression>&apos;0.00&apos;</DefaultExpression>
+    </column>
+    <column id="35" parent="16" name="status">
+      <Position>8</Position>
+      <DataType>tinyint(4)|0</DataType>
+      <DefaultExpression>&apos;0&apos;</DefaultExpression>
+    </column>
+    <column id="36" parent="16" name="create_date">
+      <Position>9</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="37" parent="16" name="pay_date">
+      <Position>10</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="38" parent="16" name="order_channel">
+      <Position>11</Position>
+      <DataType>tinyint(4)|0</DataType>
+    </column>
+    <key id="39" parent="16" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="40" parent="17" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="41" parent="17" name="goods_id">
+      <Position>2</Position>
+      <DataType>bigint(20)|0</DataType>
+    </column>
+    <column id="42" parent="17" name="pb_price">
+      <Position>3</Position>
+      <DataType>decimal(10,2)|0</DataType>
+    </column>
+    <column id="43" parent="17" name="stock_count">
+      <Position>4</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="44" parent="17" name="start_date">
+      <Position>5</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="45" parent="17" name="end_date">
+      <Position>6</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <key id="46" parent="17" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="47" parent="18" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="48" parent="18" name="user_id">
+      <Position>2</Position>
+      <DataType>bigint(20)|0</DataType>
+    </column>
+    <column id="49" parent="18" name="order_id">
+      <Position>3</Position>
+      <DataType>bigint(20)|0</DataType>
+    </column>
+    <column id="50" parent="18" name="goods_id">
+      <Position>4</Position>
+      <DataType>bigint(20)|0</DataType>
+    </column>
+    <key id="51" parent="18" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="52" parent="19" name="id">
+      <Position>1</Position>
+      <DataType>bigint(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="53" parent="19" name="nickname">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="54" parent="19" name="password">
+      <Position>3</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="55" parent="19" name="salt">
+      <Position>4</Position>
+      <DataType>varchar(10)|0</DataType>
+    </column>
+    <column id="56" parent="19" name="head">
+      <Position>5</Position>
+      <DataType>varchar(128)|0</DataType>
+    </column>
+    <column id="57" parent="19" name="register_date">
+      <Position>6</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="58" parent="19" name="last_login_date">
+      <Position>7</Position>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="59" parent="19" name="login_count">
+      <Position>8</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <key id="60" parent="19" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>
