@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserService {
 
 
-    public static final String COOKI_NAME_TOKEN = "token";
+    public static final String TOKEN = "token";
 
     @Autowired
     private UserMapper userMapper;
@@ -79,7 +79,7 @@ public class UserService {
 
     private void addCookie(HttpServletResponse response, String token, User user) {
         redisService.set(UserKey.token,token,user);
-        Cookie cookie = new Cookie(COOKI_NAME_TOKEN,token);
+        Cookie cookie = new Cookie(TOKEN,token);
         cookie.setMaxAge(UserKey.token.expireSeconds());
         cookie.setPath("/");
         response.addCookie(cookie);
