@@ -4,6 +4,8 @@ import it.caoxin.domain.OrderInfo;
 import it.caoxin.domain.PbsOrderInfo;
 import it.caoxin.domain.User;
 import it.caoxin.mapper.OrderMapper;
+import it.caoxin.redis.RedisService;
+import it.caoxin.redis.key.OrderKey;
 import it.caoxin.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ public class OrderInfoService {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private RedisService redisService;
+
     /**
      *
      * @param userId
@@ -23,7 +28,8 @@ public class OrderInfoService {
      * @return
      */
     public PbsOrderInfo getPbsOrderInfoByUserAndGoodsId(long userId,long goodsId){
-        return orderMapper.getPbsOrderByUserAndGoodsId(userId,goodsId);
+        //1.加redis缓存优化
+        return redisService.get(OrderKey.orderKey,""+userId+goodsId,PbsOrderInfo.class);
     }
 
     @Transactional
@@ -43,6 +49,8 @@ public class OrderInfoService {
         pbsOrderInfo.setGoodsId(goods.getId());
         pbsOrderInfo.setOrderId(orderId);
         pbsOrderInfo.setUserId(user.getId());
+        //将抢购信息放入Redis
+        redisService.set(OrderKey.orderKey,""+pbsOrderInfo.getUserId()+pbsOrderInfo.getGoodsId(),PbsOrderInfo.class);
         orderMapper.insertMiaoshaOrder(pbsOrderInfo);
         return orderInfo;
     }

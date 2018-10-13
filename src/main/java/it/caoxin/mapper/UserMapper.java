@@ -9,8 +9,8 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
     @Select("select * from pbs_user where id = #{id}")
-    public User getById(@Param("id")long id);
+     User getById(@Param("id")long id);
 
-    @Insert("insert into pbs_user(id,nickname,password) values (#{id},#{nickname}, #{password})")
-    public int insert(User user);
+    @Insert("insert into pbs_user(id,nickname,password,login_count,register_date,salt) values (#{id},#{nickname},#{password},#{loginCount},#{registerDate},#{salt})")
+     int insert(User user);
 }
