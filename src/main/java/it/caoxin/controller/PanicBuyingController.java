@@ -44,26 +44,30 @@ public class PanicBuyingController {
             return "login";
         }
 
-        //判断库存
-        GoodsVo goods = goodsService.getGoodsById(goodsId);
+        //判断库存,加锁解决
+        GoodsVo goods;
+        synchronized (PanicBuyingController.class){
+             goods = goodsService.getGoodsById(goodsId);
+            Integer stockCount = goods.getStockCount();
+            if (stockCount <= 0){
+                model.addAttribute("errmsg", CodeMsg.MIAO_SHA_OVER.getMsg());
+                return "panicbuying_fail";
+            }
+            //判断是否抢购成功,不能重复抢购
+            PbsOrderInfo pbsOrderInfo = orderInfoService.getPbsOrderInfoByUserAndGoodsId(user.getId(), goodsId);
+            if (pbsOrderInfo != null){
+                model.addAttribute("errmsg", CodeMsg.REPEATE_MIAOSHA.getMsg());
+                return "panicbuying_fail";
+            }
 
-        Integer stockCount = goods.getStockCount();
-        if (stockCount <= 0){
-            model.addAttribute("errmsg", CodeMsg.MIAO_SHA_OVER.getMsg());
-            return "panicbuying_fail";
+            //减少库存，写入表数据
+            OrderInfo orderInfo = panicBuyingService.panicBuying(user, goods);
+            model.addAttribute("orderInfo",orderInfo);
+            model.addAttribute("goods",goods);
         }
 
-        //判断是否抢购成功,不能重复抢购
-        PbsOrderInfo pbsOrderInfo = orderInfoService.getPbsOrderInfoByUserAndGoodsId(user.getId(), goodsId);
-        if (pbsOrderInfo != null){
-            model.addAttribute("errmsg", CodeMsg.REPEATE_MIAOSHA.getMsg());
-            return "panicbuying_fail";
-        }
 
-        //减少库存，写入表数据
-        OrderInfo orderInfo = panicBuyingService.panicBuying(user, goods);
-        model.addAttribute("orderInfo",orderInfo);
-        model.addAttribute("goods",goods);
+
 
         return "order_detail";
     }
