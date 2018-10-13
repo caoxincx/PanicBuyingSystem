@@ -5,6 +5,7 @@ import it.caoxin.redis.RedisService;
 import it.caoxin.redis.key.GoodKey;
 import it.caoxin.service.GoodsService;
 import it.caoxin.vo.GoodsVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class GoodController {
     @Autowired
     private ApplicationContext applicationContext;
     /**
-     * 原来list,查询商品列表
+     * 原来list,查询商品列表没有缓存到redis
      * @param model
      * @param user
      * @return
@@ -49,7 +50,7 @@ public class GoodController {
     }
 
     /**
-     * 将页面缓存到redis中
+     * 将商品列表页面缓存到redis中
      * @param model
      * @param user
      * @param request
@@ -63,7 +64,7 @@ public class GoodController {
         model.addAttribute("user",user);
         //2.取缓存中的html值
         String html = redisService.get(GoodKey.goodListToken, "", String.class);
-        if (html != null){
+        if (StringUtils.isNotEmpty(html)){
             return html;
         }
         //3.否则手动解析
@@ -83,6 +84,13 @@ public class GoodController {
         return view;
     }
 
+    /**
+     * 商品详情页面没有缓存
+     * @param goodsId
+     * @param model
+     * @param user
+     * @return
+     */
     @RequestMapping("/detail/{id}")
     public String goodDetail(@PathVariable("id") long goodsId,
                              Model model,
@@ -115,6 +123,66 @@ public class GoodController {
         model.addAttribute("remainSeconds",remainSeconds);
 
         return "goods_detail";
-
     }
+
+    /**
+     * 商品详情页面增加缓存
+     * @param goodsId
+     * @param model
+     * @param user
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/goodsdetail/{id}")
+    @ResponseBody
+    public String goodsDetail(@PathVariable("id") long goodsId,
+                             Model model,
+                             User user,
+                              HttpServletRequest request,
+                              HttpServletResponse response){
+
+        String html = redisService.get(GoodKey.goodDetailToken, "" + goodsId, String.class);
+        if (StringUtils.isNotEmpty(html)){
+            return html;
+        }
+        model.addAttribute("user",user);
+        //查询对应的商品
+        GoodsVo goods = goodsService.getGoodsById(goodsId);
+        model.addAttribute("goods",goods);
+
+        //商品抢购判断
+        long startTime = goods.getStartDate().getTime();
+        long endTime = goods.getEndDate().getTime();
+        long now = System.currentTimeMillis();
+
+        int panicBuyingStatus = 0;
+        int remainSeconds = 0;
+
+        if (now < startTime){
+            panicBuyingStatus = 0;
+            remainSeconds = (int)((startTime-now)/1000);
+        }else if (now > endTime){
+            panicBuyingStatus = 2;
+            remainSeconds = -1;
+        }else {
+            panicBuyingStatus = 1;
+            remainSeconds = 0;
+        }
+
+        model.addAttribute("panicBuyingStatus",panicBuyingStatus);
+        model.addAttribute("remainSeconds",remainSeconds);
+
+        SpringWebContext webContext = new SpringWebContext(
+                request,
+                response,
+                request.getServletContext(),
+                request.getLocale()
+                ,model.asMap(),
+                applicationContext);
+        String goodDetailsView = thymeleafViewResolver.getTemplateEngine().process("goods_detail", webContext);
+        redisService.set(GoodKey.goodDetailToken,""+goodsId,goodDetailsView);
+        return goodDetailsView;
+    }
+
 }
