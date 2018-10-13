@@ -10,7 +10,7 @@ public class User {
   private String head;
   private Date registerDate;
   private Date lastLoginDate;
-  private Long loginCount;
+  private Integer loginCount;
 
   public Long getId() {
     return id;
@@ -68,11 +68,11 @@ public class User {
     this.lastLoginDate = lastLoginDate;
   }
 
-  public Long getLoginCount() {
+  public Integer getLoginCount() {
     return loginCount;
   }
 
-  public void setLoginCount(Long loginCount) {
+  public void setLoginCount(Integer loginCount) {
     this.loginCount = loginCount;
   }
 }

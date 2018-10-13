@@ -27,9 +27,9 @@ public class LoginController {
 
     @RequestMapping("/loginIn")
     @ResponseBody
-    public Result<Boolean> LoginIn(HttpServletResponse response, @Valid LoginVo loginVo){
+    public Result<String> LoginIn(HttpServletResponse response, @Valid LoginVo loginVo){
         log.info(loginVo.toString());
-        userService.login(response,loginVo);
-        return Result.success(true);
+        String token = userService.login(response, loginVo);
+        return Result.success(token);
     }
 }
