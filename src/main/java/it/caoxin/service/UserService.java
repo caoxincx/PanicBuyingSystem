@@ -28,7 +28,15 @@ public class UserService {
     private RedisService redisService;
 
     public User getUserById(long id){
-        return userMapper.getById(id);
+        User user = redisService.get(UserKey.token, "" + id, User.class);
+        if (user != null){
+            return user;
+        }
+        user = userMapper.getById(id);
+        redisService.set(UserKey.token,""+id,user);
+        return user;
+
+
     }
 
     public int insert(User user){
