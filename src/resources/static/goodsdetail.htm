@@ -71,7 +71,7 @@
 
     function panicBuying(){
         $.ajax({
-            url:"/panicBuying/panicBuying",
+            url:"/panicbuying/panicbuying",
             type:"POST",
             data:{
                 goodsId:$("#goodsId").val(),
@@ -92,7 +92,7 @@
 
     function render(detail){
         console.log(detail)
-        var miaoshaStatus = detail.miaoshaStatus;
+        var miaoshaStatus = detail.panicBuyingStatus;
         var  remainSeconds = detail.remainSeconds;
         var goods = detail.goods;
         var user = detail.user;

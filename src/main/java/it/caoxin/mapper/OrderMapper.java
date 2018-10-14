@@ -32,4 +32,12 @@ public interface OrderMapper {
      */
     @Insert("insert into pbs_order_info (user_id, goods_id, order_id)values(#{userId}, #{goodsId}, #{orderId})")
     public int insertMiaoshaOrder(PbsOrderInfo pbsOrderInfo);
+
+    /**
+     * 通过orderId查询订单信息
+     * @param orderId
+     * @return
+     */
+    @Select("select * from order_info where id = #{orderId}")
+    public OrderInfo getOrderById(@Param("orderId")long orderId);
 }

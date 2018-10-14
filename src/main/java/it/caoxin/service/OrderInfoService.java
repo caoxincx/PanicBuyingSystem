@@ -29,7 +29,8 @@ public class OrderInfoService {
      */
     public PbsOrderInfo getPbsOrderInfoByUserAndGoodsId(long userId,long goodsId){
         //1.加redis缓存优化
-        return redisService.get(OrderKey.orderKey,""+userId+goodsId,PbsOrderInfo.class);
+        PbsOrderInfo pbsOrderInfo = redisService.get(OrderKey.orderKey, "" + userId +"_"+ goodsId, PbsOrderInfo.class);
+        return pbsOrderInfo;
     }
 
     @Transactional
@@ -50,8 +51,12 @@ public class OrderInfoService {
         pbsOrderInfo.setOrderId(orderId);
         pbsOrderInfo.setUserId(user.getId());
         //将抢购信息放入Redis
-        redisService.set(OrderKey.orderKey,""+pbsOrderInfo.getUserId()+pbsOrderInfo.getGoodsId(),PbsOrderInfo.class);
+        redisService.set(OrderKey.orderKey,""+pbsOrderInfo.getUserId()+"_"+pbsOrderInfo.getGoodsId(),pbsOrderInfo);
         orderMapper.insertMiaoshaOrder(pbsOrderInfo);
         return orderInfo;
+    }
+
+    public OrderInfo getOrderInfoById(long orderId){
+        return orderMapper.getOrderById(orderId);
     }
 }
