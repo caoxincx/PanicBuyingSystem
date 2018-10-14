@@ -3,7 +3,9 @@ package it.caoxin.controller;
 import it.caoxin.domain.User;
 import it.caoxin.redis.RedisService;
 import it.caoxin.redis.key.GoodKey;
+import it.caoxin.result.Result;
 import it.caoxin.service.GoodsService;
+import it.caoxin.vo.GoodDetailVo;
 import it.caoxin.vo.GoodsVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,19 +88,20 @@ public class GoodController {
 
     /**
      * 商品详情页面没有缓存
+     *
+     * 页面静态化优化，加上GoodDetailVo
      * @param goodsId
      * @param model
      * @param user
      * @return
      */
     @RequestMapping("/detail/{id}")
-    public String goodDetail(@PathVariable("id") long goodsId,
-                             Model model,
-                             User user){
-        model.addAttribute("user",user);
+    @ResponseBody
+    public Result<GoodDetailVo> goodDetail(@PathVariable("id") long goodsId,
+                                           Model model,
+                                           User user){
         //查询对应的商品
         GoodsVo goods = goodsService.getGoodsById(goodsId);
-        model.addAttribute("goods",goods);
 
         //商品抢购判断
         long startTime = goods.getStartDate().getTime();
@@ -119,10 +122,12 @@ public class GoodController {
             remainSeconds = 0;
         }
 
-        model.addAttribute("panicBuyingStatus",panicBuyingStatus);
-        model.addAttribute("remainSeconds",remainSeconds);
-
-        return "goods_detail";
+        GoodDetailVo goodDetailVo = new GoodDetailVo();
+        goodDetailVo.setGoods(goods);
+        goodDetailVo.setUser(user);
+        goodDetailVo.setPanicBuyingStatus(panicBuyingStatus);
+        goodDetailVo.setRemainSeconds(remainSeconds);
+        return Result.success(goodDetailVo);
     }
 
     /**
