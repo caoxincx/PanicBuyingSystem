@@ -1,6 +1,7 @@
 package it.caoxin.controller;
 
 import it.caoxin.domain.User;
+import it.caoxin.rabbitmq.MQSender;
 import it.caoxin.result.CodeMsg;
 import it.caoxin.result.Result;
 import it.caoxin.service.UserService;
@@ -20,6 +21,9 @@ public class TestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MQSender mqSender;
 
     @RequestMapping("hello")
     @ResponseBody
@@ -61,6 +65,34 @@ public class TestController {
             userService.insert(user);
         }
         return Result.success(CodeMsg.SUCCESS);
+    }
+
+    @RequestMapping("/mq/test")
+    @ResponseBody
+    public void send(){
+        mqSender.send("HELLO MQ");
+        return;
+    }
+
+    @RequestMapping("/mq/testtopic")
+    @ResponseBody
+    public void sendTopic(){
+        mqSender.sendToTopic("hello topic");
+        return;
+    }
+
+    @RequestMapping("/mq/testfanout")
+    @ResponseBody
+    public void sendFanout(){
+        mqSender.sendToFanout("hello fanout");
+        return;
+    }
+
+    @RequestMapping("mq/testheader")
+    @ResponseBody
+    public void sendHeader(){
+        mqSender.sendHeader("hell header");
+        return;
     }
 
 }

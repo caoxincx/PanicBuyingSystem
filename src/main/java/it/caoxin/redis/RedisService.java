@@ -98,8 +98,8 @@ public class RedisService {
 			  returnToPool(jedis);
 		 }
 	}
-	
-	private <T> String beanToString(T value) {
+
+	public static  <T> String beanToString(T value) {
 		if(value == null) {
 			return null;
 		}
@@ -116,7 +116,7 @@ public class RedisService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T stringToBean(String str, Class<T> clazz) {
+	public static  <T> T stringToBean(String str, Class<T> clazz) {
 		if(str == null || str.length() <= 0 || clazz == null) {
 			 return null;
 		}
@@ -131,7 +131,7 @@ public class RedisService {
 		}
 	}
 
-	private void returnToPool(Jedis jedis) {
+	public void returnToPool(Jedis jedis) {
 		 if(jedis != null) {
 			 jedis.close();
 		 }
