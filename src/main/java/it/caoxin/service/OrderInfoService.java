@@ -35,6 +35,7 @@ public class OrderInfoService {
 
     @Transactional
     public OrderInfo createOrder(User user, GoodsVo goods) {
+        //订单信息
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setCreateDate(new Date());
         orderInfo.setDeliveryAddrId(0L);
@@ -45,10 +46,12 @@ public class OrderInfoService {
         orderInfo.setOrderChannel(1);
         orderInfo.setStatus(0);
         orderInfo.setUserId(user.getId());
-        long orderId = orderMapper.insert(orderInfo);
+        orderMapper.insert(orderInfo);
+
+        //抢购订单信息
         PbsOrderInfo pbsOrderInfo = new PbsOrderInfo();
         pbsOrderInfo.setGoodsId(goods.getId());
-        pbsOrderInfo.setOrderId(orderId);
+        pbsOrderInfo.setOrderId(orderInfo.getId());
         pbsOrderInfo.setUserId(user.getId());
         //将抢购信息放入Redis
         redisService.set(OrderKey.orderKey,""+pbsOrderInfo.getUserId()+"_"+pbsOrderInfo.getGoodsId(),pbsOrderInfo);

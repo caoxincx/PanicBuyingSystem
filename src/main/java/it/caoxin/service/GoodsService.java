@@ -21,9 +21,10 @@ public class GoodsService {
         return goodsMapper.getPanicBuyingGoodById(goodsId);
     }
 
-    public void reduceStockCount(GoodsVo goodsVo){
+    public boolean reduceStockCount(GoodsVo goodsVo){
         PbsGoods pbsGoods = new PbsGoods();
         pbsGoods.setGoodsId(goodsVo.getId());
-        goodsMapper.reduceStockCount(pbsGoods);
+        int result = goodsMapper.reduceStockCount(pbsGoods);
+        return result > 0;
     }
 }
