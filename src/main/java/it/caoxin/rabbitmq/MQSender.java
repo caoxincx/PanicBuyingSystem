@@ -16,6 +16,14 @@ public class MQSender {
     @Autowired
     private AmqpTemplate amqpTemplate;
 
+    public void panicGoods(PbsMessage pbsMessage){
+        String pbsMsg = RedisService.beanToString(pbsMessage);
+        logger.info("pbsMsg:{}"+pbsMsg);
+        amqpTemplate.convertAndSend(MqConfig.PBS_QUEUE,pbsMsg);
+    }
+
+
+
     public void send(Object object){
         String message = RedisService.beanToString(object);
         logger.info("send:--->"+message);

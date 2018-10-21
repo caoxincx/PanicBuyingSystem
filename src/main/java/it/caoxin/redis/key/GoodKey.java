@@ -9,4 +9,5 @@ public class GoodKey extends BasePrefix {
     }
     public static GoodKey goodListToken = new GoodKey(TOKEN_EXPIRE,"goodList");
     public static GoodKey goodDetailToken = new GoodKey(TOKEN_EXPIRE,"goodDetail");
+    public static GoodKey goodCount = new GoodKey(0,"goodCount");
 }

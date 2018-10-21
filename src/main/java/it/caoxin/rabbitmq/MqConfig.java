@@ -11,6 +11,15 @@ import java.util.Map;
 @Configuration
 public class MqConfig {
 
+    /**
+     * 抢购系统的逻辑
+     */
+    public static final String PBS_QUEUE = "pbs_queue";
+    @Bean
+    public Queue pbsQueue(){
+        return new Queue(PBS_QUEUE,true);
+    }
+
     public static final String QUEUE = "queue";
 
     /**
@@ -21,8 +30,6 @@ public class MqConfig {
     public Queue queue(){
         return new Queue(QUEUE,true);
     }
-
-
     /**
      * Topic模式 交换机Exchange
      */
@@ -100,5 +107,9 @@ public class MqConfig {
         map.put("header2","value2");
         return BindingBuilder.bind(headerQueue()).to(headersExchange()).whereAll(map).match();
     }
+
+
+
+
 
 }

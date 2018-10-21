@@ -54,7 +54,7 @@ public class TestController {
     @PostMapping("/db/post")
     @ResponseBody
     public Result<CodeMsg>dbPost(){
-        for(int i=0;i<5000;i++) {
+        for(int i=49;i<5000;i++) {
             User user = new User();
             user.setId(13000000000L+i);
             user.setLoginCount(1);
