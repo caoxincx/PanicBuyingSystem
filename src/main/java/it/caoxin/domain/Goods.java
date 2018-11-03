@@ -7,19 +7,19 @@ public class Goods {
     private String goodsImg;
     private String goodsDetail;
     private Double goodsPrice;
-    private Integer goodStock;
+    private Integer goodsStock;
 
     public Goods() {
     }
 
-    public Goods(Long id, String goodsName, String goodsTitle, String goodsImg, String goodsDetail, Double goodsPrice, Integer goodStock) {
+    public Goods(Long id, String goodsName, String goodsTitle, String goodsImg, String goodsDetail, Double goodsPrice, Integer goodsStock) {
         this.id = id;
         this.goodsName = goodsName;
         this.goodsTitle = goodsTitle;
         this.goodsImg = goodsImg;
         this.goodsDetail = goodsDetail;
         this.goodsPrice = goodsPrice;
-        this.goodStock = goodStock;
+        this.goodsStock = goodsStock;
     }
 
     public Long getId() {
@@ -70,12 +70,12 @@ public class Goods {
         this.goodsPrice = goodsPrice;
     }
 
-    public Integer getGoodStock() {
-        return goodStock;
+    public Integer getGoodsStock() {
+        return goodsStock;
     }
 
-    public void setGoodStock(Integer goodStock) {
-        this.goodStock = goodStock;
+    public void setGoodsStock(Integer goodsStock) {
+        this.goodsStock = goodsStock;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Goods {
                 ", goodsImg='" + goodsImg + '\'' +
                 ", goodsDetail='" + goodsDetail + '\'' +
                 ", goodsPrice=" + goodsPrice +
-                ", goodStock=" + goodStock +
+                ", goodsStock=" + goodsStock +
                 '}';
     }
 }
