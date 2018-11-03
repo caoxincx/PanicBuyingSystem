@@ -1,5 +1,6 @@
 package it.caoxin.config;
 
+import it.caoxin.annotation.UserThreadLocal;
 import it.caoxin.domain.User;
 import it.caoxin.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -47,34 +48,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                                   NativeWebRequest nativeWebRequest,
                                   WebDataBinderFactory webDataBinderFactory) throws Exception {
 
-        HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
-        HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
-
-        String paramoken = request.getParameter(UserService.TOKEN);
-        String cookieToken = getCookie(request,UserService.TOKEN);
-
-        if(StringUtils.isEmpty(paramoken) && StringUtils.isEmpty(cookieToken)){
-            return null;
-        }
-
-        String token = StringUtils.isEmpty(paramoken) ? cookieToken : paramoken;
-        User user = userService.getByToken(response, token);
-        return user;
+        return UserThreadLocal.getUser();
     }
 
-    /**
-     * 通过浏览器中Cookie的token
-     * @param request
-     * @param token
-     * @return
-     */
-    private String getCookie(HttpServletRequest request, String token) {
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies){
-            if (cookie.getName().equals(token)){
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
+
 }

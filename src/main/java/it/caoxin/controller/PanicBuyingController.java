@@ -1,6 +1,7 @@
 package it.caoxin.controller;
 
 import com.sun.org.apache.bcel.internal.classfile.Code;
+import it.caoxin.annotation.AccessLimit;
 import it.caoxin.domain.OrderInfo;
 import it.caoxin.domain.PbsOrderInfo;
 import it.caoxin.domain.User;
@@ -146,13 +147,13 @@ public class PanicBuyingController implements InitializingBean{
         long result = panicBuyingService.getPbsResult(user.getId(),goodsId);
         return Result.success(result);
     }
-
+    @AccessLimit(seconds = 5,maxCount = 5)
     @RequestMapping(value = "/path")
     @ResponseBody
     public Result<String> getPanicBuyingPath(
             User user,
             @RequestParam("goodsId") Long goodsId,
-            @RequestParam(value = "verifyCode") int verifyCode){
+            @RequestParam(value = "verifyCode",defaultValue = "0") int verifyCode){
         // 用户为空返回【系统异常】
         if (user == null){
             return Result.error(CodeMsg.SESSION_ERROR);
@@ -167,15 +168,15 @@ public class PanicBuyingController implements InitializingBean{
         return Result.success(path);
     }
 
+    @AccessLimit(seconds = 5,maxCount = 5)
     @RequestMapping(value = "/verifyCode")
     @ResponseBody
-    public Result<String> getVerifyCode(HttpServletRequest request,
-                                        HttpServletResponse response,
+    public Result<String> getVerifyCode(HttpServletResponse response,
                                         User user,
                                         @RequestParam("goodsId") Long goodsId){
 
         if (user == null){
-            Result.error(CodeMsg.SESSION_ERROR);
+            return Result.error(CodeMsg.SESSION_ERROR);
         }
         try {
             BufferedImage image = panicBuyingService.createVerifyCode(user,goodsId);
