@@ -48,7 +48,13 @@
                         <button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
                         <input type="hidden" name="goodsId"  id="goodsId" />
                     </form>-->
-                <button class="btn btn-primary btn-block" type="button" id="buyButton"onclick="panicBuying()">立即秒杀</button>
+                <div class="row">
+                    <div class="form-inline">
+                        <img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
+                        <input id="verifyCode"  class="form-control" style="display:none"/>
+                        <button class="btn btn-primary" type="button" id="buyButton"onclick="getPanicBuyingAddress()">立即秒杀</button>
+                    </div>
+                </div>
                 <input type="hidden" name="goodsId"  id="goodsId" />
             </td>
         </tr>
@@ -68,6 +74,7 @@
 </div>
 </body>
 <script>
+    /** 获取抢购结果*/
     function getResult(goodsId) {
         g_showLoading();
         $.ajax({
@@ -103,9 +110,10 @@
             }
         });
     }
-    function panicBuying(){
+    /**抢购 */
+    function panicBuying(path){
         $.ajax({
-            url:"/panicbuying/panicbuying",
+            url:"/panicbuying/"+path+"/panicbuying",
             type:"POST",
             data:{
                 goodsId:$("#goodsId").val(),
@@ -124,7 +132,31 @@
         });
 
     }
-
+    /** 获取抢购地址 */
+    function getPanicBuyingAddress() {
+        var goodsId = $("#goodsId").val();
+        g_showLoading();
+        $.ajax({
+            url:"/panicbuying/path",
+            type:"GET",
+            data:{
+                goodsId:goodsId,
+                verifyCode:$("#verifyCode").val()
+            },
+            success:function(data){
+                if(data.code == 0){
+                    var path = data.data;
+                    panicBuying(path);
+                }else{
+                    layer.msg(data.msg);
+                }
+            },
+            error:function(){
+                layer.msg("客户端请求有误");
+            }
+        });
+    }
+    /** 页面渲染*/
     function render(detail){
         console.log(detail)
         var miaoshaStatus = detail.panicBuyingStatus;
@@ -149,7 +181,7 @@
         //countDown();
         getGoodsDetail();
     });
-
+    /**商品详情 */
     function getGoodsDetail(){
         var goodsId = g_getQueryString("goodsId");
         $.ajax({
@@ -185,11 +217,18 @@
                 clearTimeout(timeout);
             }
             $("#miaoshaTip").html("秒杀进行中");
+            $("#verifyCodeImg").attr("src", "/panicbuying/verifyCode?goodsId="+$("#goodsId").val());
+            $("#verifyCodeImg").show();
+            $("#verifyCode").show();
         }else{//秒杀已经结束
             $("#buyButton").attr("disabled", true);
             $("#miaoshaTip").html("秒杀已经结束");
+            $("#verifyCodeImg").hide();
+            $("#verifyCode").hide();
         }
     }
-
+    function refreshVerifyCode() {
+        $("#verifyCodeImg").attr("src", "/panicbuying/verifyCode?goodsId=" + $("#goodsId").val() + "&timestamp=" + new Date().getTime());
+    }
 </script>
 </html>

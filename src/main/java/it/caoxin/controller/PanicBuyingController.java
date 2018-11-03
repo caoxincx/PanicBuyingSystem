@@ -1,5 +1,6 @@
 package it.caoxin.controller;
 
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import it.caoxin.domain.OrderInfo;
 import it.caoxin.domain.PbsOrderInfo;
 import it.caoxin.domain.User;
@@ -19,11 +20,14 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
 import javax.jws.WebParam;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,14 +69,20 @@ public class PanicBuyingController implements InitializingBean{
         }
     }
 
-    @RequestMapping("/panicbuying")
+    @RequestMapping("/{path}/panicbuying")
     @ResponseBody
-    public Result<Integer> panicBuying(User user, Model model, @RequestParam("goodsId")long goodsId){
+    public Result<Integer> panicBuying(User user, Model model,
+                                       @RequestParam("goodsId")long goodsId,
+                                       @PathVariable("path") String path){
         model.addAttribute("user",user);
         if (user == null){
             return Result.error(CodeMsg.SESSION_ERROR);
         }
-
+        // 验证path
+        boolean check = panicBuyingService.checkPath(user,goodsId,path);
+        if (!check){
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+        }
         //先从内容标记判断，商品是否已经抢购完成
         if (isGoodOverMap.get(goodsId)){
             return Result.error(CodeMsg.MIAO_SHA_OVER);
@@ -135,6 +145,49 @@ public class PanicBuyingController implements InitializingBean{
         }
         long result = panicBuyingService.getPbsResult(user.getId(),goodsId);
         return Result.success(result);
+    }
+
+    @RequestMapping(value = "/path")
+    @ResponseBody
+    public Result<String> getPanicBuyingPath(
+            User user,
+            @RequestParam("goodsId") Long goodsId,
+            @RequestParam(value = "verifyCode") int verifyCode){
+        // 用户为空返回【系统异常】
+        if (user == null){
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+
+        boolean check = panicBuyingService.checkVerifyCode(user,goodsId,verifyCode);
+        if (!check){
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+        }
+
+        String path = panicBuyingService.createPanicBuyingPath(user,goodsId);
+        return Result.success(path);
+    }
+
+    @RequestMapping(value = "/verifyCode")
+    @ResponseBody
+    public Result<String> getVerifyCode(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        User user,
+                                        @RequestParam("goodsId") Long goodsId){
+
+        if (user == null){
+            Result.error(CodeMsg.SESSION_ERROR);
+        }
+        try {
+            BufferedImage image = panicBuyingService.createVerifyCode(user,goodsId);
+            OutputStream out = response.getOutputStream();
+            ImageIO.write(image,"JPEG",out);
+            out.flush();
+            out.close();
+        }catch (Exception e){
+            e.printStackTrace();
+            Result.error(CodeMsg.MIAOSHA_FAIL);
+        }
+        return null;
     }
 
 }
