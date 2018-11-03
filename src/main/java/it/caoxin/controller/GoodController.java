@@ -147,7 +147,7 @@ public class GoodController {
                               HttpServletRequest request,
                               HttpServletResponse response){
 
-        String html = redisService.get(GoodKey.goodDetailToken, "" + goodsId, String.class);
+        String html = redisService.get(GoodKey.goodDetailToken, String.valueOf(goodsId), String.class);
         if (StringUtils.isNotEmpty(html)){
             return html;
         }
@@ -186,7 +186,7 @@ public class GoodController {
                 ,model.asMap(),
                 applicationContext);
         String goodDetailsView = thymeleafViewResolver.getTemplateEngine().process("goods_detail", webContext);
-        redisService.set(GoodKey.goodDetailToken,""+goodsId,goodDetailsView);
+        redisService.set(GoodKey.goodDetailToken,String.valueOf(goodsId),goodDetailsView);
         return goodDetailsView;
     }
 

@@ -64,7 +64,7 @@ public class PanicBuyingController implements InitializingBean{
            return;
         }
         for (GoodsVo goodsVo : allGoods){
-            redisService.set(GoodKey.goodCount,""+goodsVo.getId(),goodsVo.getStockCount());
+            redisService.set(GoodKey.goodCount,String.valueOf(goodsVo.getId()),goodsVo.getStockCount());
             isGoodOverMap.put(goodsVo.getId(),false);
         }
     }
@@ -88,7 +88,7 @@ public class PanicBuyingController implements InitializingBean{
             return Result.error(CodeMsg.MIAO_SHA_OVER);
         }
         //1.优化后的实现，先从redis中预减库存
-        Long count = redisService.decr(GoodKey.goodCount, "" + goodsId);
+        Long count = redisService.decr(GoodKey.goodCount, String.valueOf(goodsId));
 
         if (count < 0){
             isGoodOverMap.put(goodsId,true);
